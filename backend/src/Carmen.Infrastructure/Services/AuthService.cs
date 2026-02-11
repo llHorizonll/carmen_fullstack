@@ -46,26 +46,21 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Account is locked. Please try again later.");
         }
 
-        // Query 2, 3, 4: Get roles, permissions, and accessible tenants in parallel
-        var rolesTask = _context.UserRoles
+        // Query 2, 3, 4: Get roles, permissions, and accessible tenants sequentially
+        // (DbContext is not thread-safe, cannot run queries in parallel)
+        var roles = await _context.UserRoles
             .Where(ur => ur.UserId == user.Id)
             .Select(ur => ur.Role.Name)
             .ToListAsync();
 
-        var permissionsTask = _context.UserRoles
+        var permissions = await _context.UserRoles
             .Where(ur => ur.UserId == user.Id)
             .SelectMany(ur => ur.Role.RolePermissions)
             .Select(rp => rp.Permission.Code)
             .Distinct()
             .ToListAsync();
 
-        var accessibleTenantsTask = GetAccessibleTenantsAsync(user);
-
-        await Task.WhenAll(rolesTask, permissionsTask, accessibleTenantsTask);
-
-        var roles = rolesTask.Result;
-        var permissions = permissionsTask.Result;
-        var accessibleTenants = accessibleTenantsTask.Result;
+        var accessibleTenants = await GetAccessibleTenantsAsync(user);
 
         // Determine the active tenant
         Tenant? activeTenant = null;
@@ -171,26 +166,20 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Account is disabled");
         }
 
-        // Query 2, 3, 4: Get roles, permissions, and accessible tenants in parallel
-        var rolesTask = _context.UserRoles
+        // Query 2, 3, 4: Get roles, permissions, and accessible tenants sequentially
+        var roles = await _context.UserRoles
             .Where(ur => ur.UserId == user.Id)
             .Select(ur => ur.Role.Name)
             .ToListAsync();
 
-        var permissionsTask = _context.UserRoles
+        var permissions = await _context.UserRoles
             .Where(ur => ur.UserId == user.Id)
             .SelectMany(ur => ur.Role.RolePermissions)
             .Select(rp => rp.Permission.Code)
             .Distinct()
             .ToListAsync();
 
-        var accessibleTenantsTask = GetAccessibleTenantsAsync(user);
-
-        await Task.WhenAll(rolesTask, permissionsTask, accessibleTenantsTask);
-
-        var roles = rolesTask.Result;
-        var permissions = permissionsTask.Result;
-        var accessibleTenants = accessibleTenantsTask.Result;
+        var accessibleTenants = await GetAccessibleTenantsAsync(user);
 
         // Use primary tenant as active tenant for refresh
         var activeTenant = user.Tenant;
@@ -273,24 +262,22 @@ public class AuthService : IAuthService
             .Include(u => u.Tenant)
             .FirstAsync(u => u.Id == user.Id);
 
-        // Get roles, permissions, and accessible tenants in parallel
-        var rolesTask = _context.UserRoles
+        // Get roles, permissions, and accessible tenants sequentially
+        var roles = await _context.UserRoles
             .Where(ur => ur.UserId == user.Id)
             .Select(ur => ur.Role.Name)
             .ToListAsync();
 
-        var permissionsTask = _context.UserRoles
+        var permissions2 = await _context.UserRoles
             .Where(ur => ur.UserId == user.Id)
             .SelectMany(ur => ur.Role.RolePermissions)
             .Select(rp => rp.Permission.Code)
             .Distinct()
             .ToListAsync();
 
-        var accessibleTenantsTask = GetAccessibleTenantsAsync(createdUser);
+        var accessibleTenants = await GetAccessibleTenantsAsync(createdUser);
 
-        await Task.WhenAll(rolesTask, permissionsTask, accessibleTenantsTask);
-
-        return MapToUserDto(createdUser, createdUser.Tenant, rolesTask.Result, permissionsTask.Result, accessibleTenantsTask.Result);
+        return MapToUserDto(createdUser, createdUser.Tenant, roles, permissions2, accessibleTenants);
     }
 
     public async Task<UserDto> GetCurrentUserAsync(Guid userId)
@@ -305,24 +292,22 @@ public class AuthService : IAuthService
             throw new KeyNotFoundException("User not found");
         }
 
-        // Query 2, 3, 4: Get roles, permissions, and accessible tenants in parallel
-        var rolesTask = _context.UserRoles
+        // Query 2, 3, 4: Get roles, permissions, and accessible tenants sequentially
+        var roles = await _context.UserRoles
             .Where(ur => ur.UserId == userId)
             .Select(ur => ur.Role.Name)
             .ToListAsync();
 
-        var permissionsTask = _context.UserRoles
+        var permissions = await _context.UserRoles
             .Where(ur => ur.UserId == userId)
             .SelectMany(ur => ur.Role.RolePermissions)
             .Select(rp => rp.Permission.Code)
             .Distinct()
             .ToListAsync();
 
-        var accessibleTenantsTask = GetAccessibleTenantsAsync(user);
+        var accessibleTenants = await GetAccessibleTenantsAsync(user);
 
-        await Task.WhenAll(rolesTask, permissionsTask, accessibleTenantsTask);
-
-        return MapToUserDto(user, user.Tenant, rolesTask.Result, permissionsTask.Result, accessibleTenantsTask.Result);
+        return MapToUserDto(user, user.Tenant, roles, permissions, accessibleTenants);
     }
 
     public async Task LogoutAsync(Guid userId, string refreshToken)

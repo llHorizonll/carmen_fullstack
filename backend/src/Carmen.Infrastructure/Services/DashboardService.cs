@@ -71,23 +71,23 @@ public class DashboardService : IDashboardService
         DateTime previousMonthStart, DateTime previousMonthEnd,
         string currencyCode)
     {
-        var currentRevenue = await _context.JournalVoucherLines
-            .Include(l => l.JournalVoucher)
-            .Include(l => l.Account)
+        var currentLines = await _context.JournalVoucherLines
             .Where(l => l.JournalVoucher.Status == DocumentStatus.Posted
                         && l.Account.AccountType == AccountType.Revenue
                         && l.JournalVoucher.VoucherDate >= currentMonthStart
                         && l.JournalVoucher.VoucherDate <= asOfDate)
-            .SumAsync(l => l.CreditAmountBase - l.DebitAmountBase);
+            .Select(l => l.CreditAmountBase - l.DebitAmountBase)
+            .ToListAsync();
+        var currentRevenue = currentLines.Sum();
 
-        var previousRevenue = await _context.JournalVoucherLines
-            .Include(l => l.JournalVoucher)
-            .Include(l => l.Account)
+        var previousLines = await _context.JournalVoucherLines
             .Where(l => l.JournalVoucher.Status == DocumentStatus.Posted
                         && l.Account.AccountType == AccountType.Revenue
                         && l.JournalVoucher.VoucherDate >= previousMonthStart
                         && l.JournalVoucher.VoucherDate <= previousMonthEnd)
-            .SumAsync(l => l.CreditAmountBase - l.DebitAmountBase);
+            .Select(l => l.CreditAmountBase - l.DebitAmountBase)
+            .ToListAsync();
+        var previousRevenue = previousLines.Sum();
 
         return BuildMetric(currentRevenue, previousRevenue, currencyCode);
     }
@@ -155,8 +155,6 @@ public class DashboardService : IDashboardService
         AccountType accountType, DateTime fromDate, DateTime toDate)
     {
         var lines = await _context.JournalVoucherLines
-            .Include(l => l.JournalVoucher)
-            .Include(l => l.Account)
             .Where(l => l.JournalVoucher.Status == DocumentStatus.Posted
                         && l.Account.AccountType == accountType
                         && l.JournalVoucher.VoucherDate >= fromDate
@@ -252,14 +250,23 @@ public class DashboardService : IDashboardService
     private async Task<List<TopAccountDto>> GetTopExpenseAccountsAsync(
         DateTime fromDate, DateTime toDate, int count)
     {
-        var expenses = await _context.JournalVoucherLines
-            .Include(l => l.JournalVoucher)
-            .Include(l => l.Account)
+        var lines = await _context.JournalVoucherLines
             .Where(l => l.JournalVoucher.Status == DocumentStatus.Posted
                         && l.Account.AccountType == AccountType.Expense
                         && l.JournalVoucher.VoucherDate >= fromDate
                         && l.JournalVoucher.VoucherDate <= toDate)
-            .GroupBy(l => new { l.AccountId, l.Account.AccountCode, l.Account.AccountName })
+            .Select(l => new
+            {
+                l.AccountId,
+                l.Account.AccountCode,
+                l.Account.AccountName,
+                l.DebitAmountBase,
+                l.CreditAmountBase
+            })
+            .ToListAsync();
+
+        var expenses = lines
+            .GroupBy(l => new { l.AccountId, l.AccountCode, l.AccountName })
             .Select(g => new TopAccountDto(
                 g.Key.AccountCode,
                 g.Key.AccountName,
@@ -267,7 +274,7 @@ public class DashboardService : IDashboardService
             ))
             .OrderByDescending(a => a.Amount)
             .Take(count)
-            .ToListAsync();
+            .ToList();
 
         return expenses;
     }

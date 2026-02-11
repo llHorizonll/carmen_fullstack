@@ -136,7 +136,7 @@ public class ArInvoiceService : IArInvoiceService
                 i.TotalAmount,
                 i.PaidAmount,
                 i.BalanceAmount,
-                i.DueDate < today ? (today - i.DueDate).Days : 0,
+                i.DueDate < today ? EF.Functions.DateDiffDay(i.DueDate, today) : 0,
                 i.Lines.Count,
                 i.CreatedAt))
             .ToListAsync();
@@ -684,7 +684,7 @@ public class ArInvoiceService : IArInvoiceService
                 i.CustomerReference,
                 i.InvoiceDate,
                 i.DueDate,
-                i.DueDate < today ? (today - i.DueDate).Days : 0,
+                i.DueDate < today ? EF.Functions.DateDiffDay(i.DueDate, today) : 0,
                 i.CurrencyCode,
                 i.TotalAmount,
                 i.PaidAmount,
