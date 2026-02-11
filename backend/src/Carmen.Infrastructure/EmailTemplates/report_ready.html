@@ -1,0 +1,18 @@
+<h2>Report Ready</h2>
+<p>Hello {{RecipientName}},</p>
+<p>Your scheduled report has been generated and is ready for download:</p>
+
+<table class="info-table">
+  <tr><td>Report Name</td><td>{{ReportName}}</td></tr>
+  <tr><td>Report Type</td><td>{{ReportType}}</td></tr>
+  <tr><td>Period</td><td>{{PeriodName}}</td></tr>
+  <tr><td>Generated On</td><td>{{GeneratedDate}}</td></tr>
+</table>
+
+<div class="alert alert-success">
+  The report is available for the next <strong>{{ExpiresInDays}} days</strong>. Please download it before it expires.
+</div>
+
+<p style="text-align: center; margin-top: 24px;">
+  <a href="{{DownloadUrl}}" class="btn btn-success">Download Report</a>
+</p>

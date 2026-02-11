@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: carmen-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Carmen@Root123}
+      MYSQL_DATABASE: Carmen_Dev
+      MYSQL_USER: carmen_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-Carmen@User123}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - carmen-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: carmen-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - carmen-network
+
+  # jsreport for Visual Report Designer (Phase 9)
+  jsreport:
+    image: jsreport/jsreport:4.11.0
+    container_name: carmen-jsreport
+    restart: unless-stopped
+    ports:
+      - "5488:5488"
+    environment:
+      - extensions_authentication_enabled=true
+      - extensions_authentication_admin_username=admin
+      - extensions_authentication_admin_password=${JSREPORT_PASSWORD:-JsReport@123}
+      - extensions_authorization_enabled=true
+    volumes:
+      - jsreport-data:/jsreport
+    networks:
+      - carmen-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: carmen-backend
+    restart: unless-stopped
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=Carmen_Dev;Uid=carmen_user;Pwd=${MYSQL_PASSWORD:-Carmen@User123};SslMode=Preferred;
+      - Redis__ConnectionString=redis:6379
+      - Jwt__SecretKey=${JWT_SECRET:-carmen-secret-key-at-least-32-characters-long}
+      - Jwt__Issuer=Carmen
+      - Jwt__Audience=CarmenUsers
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - carmen-network
+
+  # Frontend (Nginx serving built React app)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: carmen-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5238/api
+    depends_on:
+      - backend
+    networks:
+      - carmen-network
+
+volumes:
+  mysql-data:
+  redis-data:
+  jsreport-data:
+
+networks:
+  carmen-network:
+    driver: bridge

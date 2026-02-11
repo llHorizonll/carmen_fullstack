@@ -1,0 +1,143 @@
+version: '3.8'
+
+# Production Docker Compose for Carmen
+# Usage: docker compose -f docker-compose.prod.yml up -d
+# Requires: .env file (copy from .env.example)
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: carmen-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: Carmen
+      MYSQL_USER: carmen_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=200
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - carmen-internal
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: carmen-redis
+    restart: always
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - carmen-internal
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # jsreport for Report Designer
+  jsreport:
+    image: jsreport/jsreport:4.11.0
+    container_name: carmen-jsreport
+    restart: always
+    environment:
+      - extensions_authentication_enabled=true
+      - extensions_authentication_admin_username=admin
+      - extensions_authentication_admin_password=${JSREPORT_PASSWORD:-JsReport@123}
+      - extensions_authorization_enabled=true
+    volumes:
+      - jsreport-data:/jsreport
+    networks:
+      - carmen-internal
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: carmen-backend
+    restart: always
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=Carmen;Uid=carmen_user;Pwd=${MYSQL_PASSWORD};SslMode=Preferred;
+      - Redis__ConnectionString=redis:6379
+      - Jwt__SecretKey=${JWT_SECRET}
+      - Jwt__Issuer=Carmen
+      - Jwt__Audience=CarmenUsers
+      - Cors__AllowedOrigins__0=${CORS_ORIGINS:-http://localhost:3000}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - carmen-internal
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # Frontend (Nginx serving React app)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: carmen-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - carmen-internal
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+volumes:
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
+  jsreport-data:
+    driver: local
+
+networks:
+  carmen-internal:
+    driver: bridge

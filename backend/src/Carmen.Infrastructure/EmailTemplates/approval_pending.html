@@ -1,0 +1,20 @@
+<h2>Approval Required</h2>
+<p>Hello {{RecipientName}},</p>
+<p>A document requires your review and approval:</p>
+
+<table class="info-table">
+  <tr><td>Document Type</td><td>{{DocumentType}}</td></tr>
+  <tr><td>Document No.</td><td>{{DocumentNumber}}</td></tr>
+  <tr><td>Submitted By</td><td>{{SubmittedBy}}</td></tr>
+  <tr><td>Submitted On</td><td>{{SubmittedDate}}</td></tr>
+  <tr><td>Amount</td><td>{{Amount}}</td></tr>
+  <tr><td>Description</td><td>{{Description}}</td></tr>
+</table>
+
+<div class="alert alert-info">
+  Please review this document and take appropriate action at your earliest convenience.
+</div>
+
+<p style="text-align: center; margin-top: 24px;">
+  <a href="{{ActionUrl}}" class="btn">Review Document</a>
+</p>

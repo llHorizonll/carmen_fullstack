@@ -1,0 +1,20 @@
+<h2>Invoice Overdue</h2>
+<p>Hello {{RecipientName}},</p>
+<p>The following invoice is past due and requires attention:</p>
+
+<table class="info-table">
+  <tr><td>Invoice No.</td><td>{{InvoiceNumber}}</td></tr>
+  <tr><td>Vendor</td><td>{{VendorName}}</td></tr>
+  <tr><td>Due Date</td><td>{{DueDate}}</td></tr>
+  <tr><td>Days Overdue</td><td>{{DaysOverdue}}</td></tr>
+  <tr><td>Total Amount</td><td>{{TotalAmount}}</td></tr>
+  <tr><td>Balance Due</td><td>{{BalanceAmount}}</td></tr>
+</table>
+
+<div class="alert alert-danger">
+  This invoice is <strong>{{DaysOverdue}} days</strong> past the due date. Please arrange payment or contact the vendor.
+</div>
+
+<p style="text-align: center; margin-top: 24px;">
+  <a href="{{ActionUrl}}" class="btn btn-danger">View Invoice</a>
+</p>

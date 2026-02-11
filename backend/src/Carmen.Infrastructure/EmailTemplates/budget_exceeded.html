@@ -1,0 +1,21 @@
+<h2>Budget Threshold Alert</h2>
+<p>Hello {{RecipientName}},</p>
+<p>A budget has exceeded the configured threshold:</p>
+
+<table class="info-table">
+  <tr><td>Department</td><td>{{DepartmentName}}</td></tr>
+  <tr><td>Account</td><td>{{AccountName}}</td></tr>
+  <tr><td>Period</td><td>{{PeriodName}}</td></tr>
+  <tr><td>Budget Amount</td><td>{{BudgetAmount}}</td></tr>
+  <tr><td>Actual Amount</td><td>{{ActualAmount}}</td></tr>
+  <tr><td>Variance</td><td>{{VarianceAmount}}</td></tr>
+  <tr><td>Utilization</td><td>{{UtilizationPercent}}</td></tr>
+</table>
+
+<div class="alert alert-danger">
+  Budget utilization has reached <strong>{{UtilizationPercent}}</strong>. Review spending and take corrective action if necessary.
+</div>
+
+<p style="text-align: center; margin-top: 24px;">
+  <a href="{{ActionUrl}}" class="btn btn-danger">View Budget Report</a>
+</p>

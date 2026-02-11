@@ -1,0 +1,18 @@
+<h2>Approval {{Status}}</h2>
+<p>Hello {{RecipientName}},</p>
+<p>Your document has been <strong>{{StatusLower}}</strong>.</p>
+
+<table class="info-table">
+  <tr><td>Document Type</td><td>{{DocumentType}}</td></tr>
+  <tr><td>Document No.</td><td>{{DocumentNumber}}</td></tr>
+  <tr><td>Decision</td><td>{{Status}}</td></tr>
+  <tr><td>Decided By</td><td>{{ApproverName}}</td></tr>
+  <tr><td>Decided On</td><td>{{DecisionDate}}</td></tr>
+  <tr><td>Amount</td><td>{{Amount}}</td></tr>
+</table>
+
+{{Comment}}
+
+<p style="text-align: center; margin-top: 24px;">
+  <a href="{{ActionUrl}}" class="btn {{ButtonClass}}">View Document</a>
+</p>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+    <PackageReference Include="NSubstitute" Version="5.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Carmen.Application\Carmen.Application.csproj" />
+    <ProjectReference Include="..\..\src\Carmen.Domain\Carmen.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Carmen.Infrastructure\Carmen.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

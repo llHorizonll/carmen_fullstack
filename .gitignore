@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+**/bin/
+**/obj/
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+!appsettings.Production.json
+
+# Test coverage
+coverage/
+*.lcov
+
+# Docker volumes (local development)
+docker/mysql/data/
+docker/redis/data/
+
+# Temp files
+*.tmp
+*.temp
+*.swp
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Rider
+.idea/
+*.DotSettings.user
+
+# JetBrains
+*.sln.iml
+
+# Secrets
+secrets/
+*.pfx
+*.key
+*.pem

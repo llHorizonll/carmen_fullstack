@@ -1,0 +1,120 @@
+version: '3.8'
+
+# Portainer-ready compose file (infrastructure services only)
+# Backend and Frontend should be deployed separately after building images
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: carmen-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: dev@carmensoftware
+      MYSQL_DATABASE: Carmen
+      MYSQL_USER: carmen_user
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - carmen-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: carmen-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - carmen-network
+
+  # jsreport for Visual Report Designer
+  jsreport:
+    image: jsreport/jsreport:4.11.0
+    container_name: carmen-jsreport
+    restart: unless-stopped
+    ports:
+      - "5488:5488"
+    environment:
+      - extensions_authentication_enabled=true
+      - extensions_authentication_admin_username=admin
+      - extensions_authentication_admin_password=dev@jsreport
+      - extensions_authorization_enabled=true
+    volumes:
+      - jsreport-data:/jsreport
+    networks:
+      - carmen-network
+
+  # Backend API
+  # TODO: Replace with your registry image after building
+  # docker build -t your-registry/carmen-backend:latest ./backend
+  # docker push your-registry/carmen-backend:latest
+  backend:
+    image: carmen-backend:latest
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    container_name: carmen-backend
+    restart: unless-stopped
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=127.0.0.1;Port=3336;Database=Carmen_Dev;Uid=root;Pwd=123456;SslMode=Preferred;
+      - Redis__ConnectionString=redis:6379
+      - Jwt__SecretKey=carmen-secret-key-change-this-in-production-minimum-32-chars
+      - Jwt__Issuer=Carmen
+      - Jwt__Audience=CarmenUsers
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - carmen-network
+
+  # Frontend (Nginx serving React app)
+  # TODO: Replace with your registry image after building
+  # docker build -t your-registry/carmen-frontend:latest ./frontend
+  # docker push your-registry/carmen-frontend:latest
+  frontend:
+    image: carmen-frontend:latest
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    container_name: carmen-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - carmen-network
+
+volumes:
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
+  jsreport-data:
+    driver: local
+
+networks:
+  carmen-network:
+    driver: bridge
