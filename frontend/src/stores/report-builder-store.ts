@@ -213,5 +213,6 @@ export const useReportBuilderStore = create<ReportBuilderState>((set, get) => ({
       filters: template.filters,
       groups: template.groups,
       previewData: null,
+      availableFields: [],
     }),
 }))

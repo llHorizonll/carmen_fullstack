@@ -20,6 +20,6 @@ public interface IWorkflowService
     Task<WorkflowInstanceDto?> GetInstanceAsync(Guid tenantId, Guid instanceId);
     Task<List<WorkflowHistoryDto>> GetHistoryForEntityAsync(Guid tenantId, WorkflowEntityType entityType, Guid entityId);
 
-    Task<PaginatedResult<PendingApprovalDto>> GetApprovalHistoryAsync(
+    Task<PaginatedResult<ApprovalHistoryDto>> GetApprovalHistoryAsync(
         Guid tenantId, Guid userId, int page = 1, int pageSize = 20);
 }

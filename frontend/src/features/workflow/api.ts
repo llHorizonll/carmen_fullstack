@@ -4,6 +4,7 @@ import type {
   WorkflowDefinitionListDto,
   WorkflowInstanceDto,
   PendingApprovalDto,
+  ApprovalHistoryItemDto,
   PaginatedResult,
   CreateWorkflowDefinitionRequest,
   UpdateWorkflowDefinitionRequest,
@@ -117,8 +118,8 @@ export const workflowApi = {
     tenantId: string,
     page = 1,
     pageSize = 20
-  ): Promise<PaginatedResult<PendingApprovalDto>> => {
-    const response = await apiClient.getRaw<PaginatedResult<PendingApprovalDto>>(
+  ): Promise<PaginatedResult<ApprovalHistoryItemDto>> => {
+    const response = await apiClient.getRaw<PaginatedResult<ApprovalHistoryItemDto>>(
       `${getBaseUrl(tenantId)}/history?page=${page}&pageSize=${pageSize}`
     )
     return response.data

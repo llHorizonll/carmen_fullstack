@@ -82,6 +82,21 @@ public class PendingApprovalDto
     public DateTime SubmittedAt { get; set; }
 }
 
+public class ApprovalHistoryDto
+{
+    public Guid InstanceId { get; set; }
+    public WorkflowEntityType EntityType { get; set; }
+    public Guid EntityId { get; set; }
+    public string EntityNumber { get; set; } = string.Empty;
+    public string DefinitionName { get; set; } = string.Empty;
+    public int StepOrder { get; set; }
+    public string StepName { get; set; } = string.Empty;
+    public WorkflowStepAction Action { get; set; }
+    public string? ActionByUserName { get; set; }
+    public DateTime ActionAt { get; set; }
+    public string? Comment { get; set; }
+}
+
 public class WorkflowActionRequest
 {
     public string? Comment { get; set; }

@@ -101,6 +101,20 @@ export interface PendingApprovalDto {
   submittedAt: string
 }
 
+export interface ApprovalHistoryItemDto {
+  instanceId: string
+  entityType: WorkflowEntityType
+  entityId: string
+  entityNumber: string
+  definitionName: string
+  stepOrder: number
+  stepName: string
+  action: WorkflowStepAction
+  actionByUserName?: string
+  actionAt: string
+  comment?: string
+}
+
 export interface WorkflowActionRequest {
   comment?: string
   delegateToUserId?: string

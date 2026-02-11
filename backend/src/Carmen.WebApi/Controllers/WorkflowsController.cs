@@ -235,8 +235,8 @@ public class WorkflowsController : ControllerBase
     /// Get approval history for current user
     /// </summary>
     [HttpGet("history")]
-    [ProducesResponseType(typeof(PaginatedResult<PendingApprovalDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<PaginatedResult<PendingApprovalDto>>> GetApprovalHistory(
+    [ProducesResponseType(typeof(PaginatedResult<ApprovalHistoryDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PaginatedResult<ApprovalHistoryDto>>> GetApprovalHistory(
         [FromRoute] Guid tenantId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20)

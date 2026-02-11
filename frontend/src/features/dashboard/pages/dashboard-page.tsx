@@ -92,7 +92,7 @@ export function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card
           className="cursor-pointer hover:bg-accent/50 transition-colors"
-          onClick={() => navigate("/general-ledger/journal-vouchers/new")}
+          onClick={() => navigate("/gl/journal-vouchers/new")}
         >
           <CardHeader className="flex flex-row items-center gap-4">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -106,7 +106,7 @@ export function DashboardPage() {
         </Card>
         <Card
           className="cursor-pointer hover:bg-accent/50 transition-colors"
-          onClick={() => navigate("/accounts-payable/invoices/new")}
+          onClick={() => navigate("/ap/invoices/new")}
         >
           <CardHeader className="flex flex-row items-center gap-4">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -120,7 +120,7 @@ export function DashboardPage() {
         </Card>
         <Card
           className="cursor-pointer hover:bg-accent/50 transition-colors"
-          onClick={() => navigate("/accounts-receivable/invoices/new")}
+          onClick={() => navigate("/ar/invoices/new")}
         >
           <CardHeader className="flex flex-row items-center gap-4">
             <div className="p-2 bg-primary/10 rounded-lg">

@@ -28,12 +28,12 @@ function formatCurrency(amount: number): string {
 export function TrialBalancePage() {
   const { t } = useTranslation()
   const [asOfDate, setAsOfDate] = useState<string>(format(new Date(), "yyyy-MM-dd"))
-  const [selectedPeriodId, setSelectedPeriodId] = useState<string>("")
+  const [selectedPeriodId, setSelectedPeriodId] = useState<string>("all")
 
   const { data: periods, isLoading: periodsLoading } = useFiscalPeriodLookup()
   const { data: trialBalance, isLoading } = useTrialBalance(
     asOfDate || undefined,
-    selectedPeriodId || undefined
+    selectedPeriodId === "all" ? undefined : selectedPeriodId
   )
 
   const columns: ColumnDef<AccountBalanceDto>[] = [
@@ -156,7 +156,7 @@ export function TrialBalancePage() {
                   <SelectValue placeholder={t("generalLedger.trialBalance.allPeriods")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">{t("generalLedger.trialBalance.allPeriods")}</SelectItem>
+                  <SelectItem value="all">{t("generalLedger.trialBalance.allPeriods")}</SelectItem>
                   {periods?.map((period) => (
                     <SelectItem key={period.id} value={period.id}>
                       {period.name}

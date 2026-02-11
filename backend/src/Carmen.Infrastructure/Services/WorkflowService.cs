@@ -338,38 +338,41 @@ public class WorkflowService : IWorkflowService
             .ToListAsync();
     }
 
-    public async Task<PaginatedResult<PendingApprovalDto>> GetApprovalHistoryAsync(
+    public async Task<PaginatedResult<ApprovalHistoryDto>> GetApprovalHistoryAsync(
         Guid tenantId, Guid userId, int page = 1, int pageSize = 20)
     {
-        var query = _context.WorkflowInstances
-            .Include(i => i.Definition)
-            .Include(i => i.History)
-            .Where(i => i.TenantId == tenantId &&
-                        i.History.Any(h => h.ActionByUserId == userId));
+        var query = _context.WorkflowHistories
+            .Include(h => h.Instance)
+                .ThenInclude(i => i.Definition)
+            .Where(h => h.Instance.TenantId == tenantId &&
+                        h.ActionByUserId == userId);
 
         var totalCount = await query.CountAsync();
 
         var items = await query
-            .OrderByDescending(i => i.CompletedAt ?? i.SubmittedAt)
+            .OrderByDescending(h => h.ActionAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(i => new PendingApprovalDto
+            .Select(h => new ApprovalHistoryDto
             {
-                InstanceId = i.Id,
-                EntityType = i.EntityType,
-                EntityId = i.EntityId,
-                EntityNumber = i.EntityNumber,
-                DefinitionName = i.Definition.Name,
-                CurrentStepOrder = i.CurrentStepOrder,
-                CurrentStepName = i.Definition.Steps
-                    .Where(s => s.StepOrder == i.CurrentStepOrder)
-                    .Select(s => s.StepName)
-                    .FirstOrDefault() ?? "",
-                SubmittedAt = i.SubmittedAt,
+                InstanceId = h.InstanceId,
+                EntityType = h.Instance.EntityType,
+                EntityId = h.Instance.EntityId,
+                EntityNumber = h.Instance.EntityNumber,
+                DefinitionName = h.Instance.Definition.Name,
+                StepOrder = h.StepOrder,
+                StepName = h.StepName,
+                Action = h.Action,
+                ActionByUserName = _context.Users
+                    .Where(u => u.Id == h.ActionByUserId)
+                    .Select(u => u.FirstName + " " + u.LastName)
+                    .FirstOrDefault(),
+                ActionAt = h.ActionAt,
+                Comment = h.Comment,
             })
             .ToListAsync();
 
-        return new PaginatedResult<PendingApprovalDto>(
+        return new PaginatedResult<ApprovalHistoryDto>(
             items, totalCount, page, pageSize,
             (int)Math.Ceiling(totalCount / (double)pageSize));
     }

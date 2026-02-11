@@ -227,9 +227,9 @@ export function ApInvoiceFormPage() {
       vendorId,
       subTotal: totals.subTotal,
       discountAmount: totals.discount,
-      tax1ProfileId: form.getValues("tax1ProfileId") || undefined,
-      tax2ProfileId: form.getValues("tax2ProfileId") || undefined,
-      whtProfileId: form.getValues("whtProfileId") || undefined,
+      tax1ProfileId: form.getValues("tax1ProfileId") === "none" ? undefined : form.getValues("tax1ProfileId") || undefined,
+      tax2ProfileId: form.getValues("tax2ProfileId") === "none" ? undefined : form.getValues("tax2ProfileId") || undefined,
+      whtProfileId: form.getValues("whtProfileId") === "none" ? undefined : form.getValues("whtProfileId") || undefined,
       lines,
     })
   }
@@ -246,9 +246,9 @@ export function ApInvoiceFormPage() {
             currencyCode: data.currencyCode,
             exchangeRate: data.exchangeRate,
             discountAmount: data.discountAmount,
-            tax1ProfileId: data.tax1ProfileId || undefined,
-            tax2ProfileId: data.tax2ProfileId || undefined,
-            whtProfileId: data.whtProfileId || undefined,
+            tax1ProfileId: data.tax1ProfileId === "none" ? undefined : data.tax1ProfileId || undefined,
+            tax2ProfileId: data.tax2ProfileId === "none" ? undefined : data.tax2ProfileId || undefined,
+            whtProfileId: data.whtProfileId === "none" ? undefined : data.whtProfileId || undefined,
             description: data.description || undefined,
             reference: data.reference || undefined,
             fiscalPeriodId: data.fiscalPeriodId,
@@ -259,7 +259,7 @@ export function ApInvoiceFormPage() {
               description: line.description || undefined,
               quantity: line.quantity,
               unitPrice: line.unitPrice,
-              tax1ProfileId: line.tax1ProfileId || undefined,
+              tax1ProfileId: line.tax1ProfileId === "none" ? undefined : line.tax1ProfileId || undefined,
             })),
           },
         })
@@ -276,9 +276,9 @@ export function ApInvoiceFormPage() {
           currencyCode: data.currencyCode,
           exchangeRate: data.exchangeRate,
           discountAmount: data.discountAmount,
-          tax1ProfileId: data.tax1ProfileId || undefined,
-          tax2ProfileId: data.tax2ProfileId || undefined,
-          whtProfileId: data.whtProfileId || undefined,
+          tax1ProfileId: data.tax1ProfileId === "none" ? undefined : data.tax1ProfileId || undefined,
+          tax2ProfileId: data.tax2ProfileId === "none" ? undefined : data.tax2ProfileId || undefined,
+          whtProfileId: data.whtProfileId === "none" ? undefined : data.whtProfileId || undefined,
           description: data.description || undefined,
           reference: data.reference || undefined,
           fiscalPeriodId: data.fiscalPeriodId,
@@ -288,7 +288,7 @@ export function ApInvoiceFormPage() {
             description: line.description || undefined,
             quantity: line.quantity,
             unitPrice: line.unitPrice,
-            tax1ProfileId: line.tax1ProfileId || undefined,
+            tax1ProfileId: line.tax1ProfileId === "none" ? undefined : line.tax1ProfileId || undefined,
           })),
         })
 
@@ -736,7 +736,7 @@ export function ApInvoiceFormPage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="">{t("ap.invoices.form.noTax")}</SelectItem>
+                            <SelectItem value="none">{t("ap.invoices.form.noTax")}</SelectItem>
                             {vatProfiles.map((profile) => (
                               <SelectItem key={profile.id} value={profile.id}>
                                 {profile.taxName} ({profile.taxRate}%)
@@ -762,7 +762,7 @@ export function ApInvoiceFormPage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="">{t("ap.invoices.form.noTax")}</SelectItem>
+                            <SelectItem value="none">{t("ap.invoices.form.noTax")}</SelectItem>
                             {serviceProfiles.map((profile) => (
                               <SelectItem key={profile.id} value={profile.id}>
                                 {profile.taxName} ({profile.taxRate}%)
@@ -788,7 +788,7 @@ export function ApInvoiceFormPage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="">{t("ap.invoices.form.noTax")}</SelectItem>
+                            <SelectItem value="none">{t("ap.invoices.form.noTax")}</SelectItem>
                             {whtProfiles.map((profile) => (
                               <SelectItem key={profile.id} value={profile.id}>
                                 {profile.taxName} ({profile.taxRate}%)

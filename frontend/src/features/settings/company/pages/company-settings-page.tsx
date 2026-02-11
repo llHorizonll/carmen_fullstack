@@ -357,6 +357,9 @@ export function CompanySettingsPage() {
                           ))}
                         </SelectContent>
                       </Select>
+                      <FormDescription>
+                        Application display language
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -385,6 +388,9 @@ export function CompanySettingsPage() {
                           ))}
                         </SelectContent>
                       </Select>
+                      <FormDescription>
+                        Local timezone for date display
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

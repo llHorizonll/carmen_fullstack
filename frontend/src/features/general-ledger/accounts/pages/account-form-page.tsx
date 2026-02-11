@@ -116,7 +116,7 @@ export function AccountFormPage() {
           data: {
             accountName: data.accountName,
             accountNameLocal: data.accountNameLocal || undefined,
-            parentAccountId: data.parentAccountId || undefined,
+            parentAccountId: data.parentAccountId === "none" ? undefined : data.parentAccountId || undefined,
             isHeader: data.isHeader,
             description: data.description || undefined,
             currencyCode: data.currencyCode,
@@ -130,7 +130,7 @@ export function AccountFormPage() {
           accountName: data.accountName,
           accountNameLocal: data.accountNameLocal || undefined,
           accountType: data.accountType,
-          parentAccountId: data.parentAccountId || undefined,
+          parentAccountId: data.parentAccountId === "none" ? undefined : data.parentAccountId || undefined,
           isHeader: data.isHeader,
           description: data.description || undefined,
           currencyCode: data.currencyCode,
@@ -316,7 +316,7 @@ export function AccountFormPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">{t("common.noParent")}</SelectItem>
+                          <SelectItem value="none">{t("common.noParent")}</SelectItem>
                           {parentAccounts
                             ?.filter((a) => a.id !== id) // Don't show self
                             .map((account) => (

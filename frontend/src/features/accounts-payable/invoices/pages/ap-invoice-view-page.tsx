@@ -141,8 +141,7 @@ export function ApInvoiceViewPage() {
 
   const isDraft = invoice.status === ApInvoiceStatus.Draft
   const isPending = invoice.status === ApInvoiceStatus.Pending
-  const canVoid = [ApInvoiceStatus.Approved, ApInvoiceStatus.PartiallyPaid].includes(invoice.status) &&
-    invoice.paidAmount === 0
+  const canVoid = invoice.status === ApInvoiceStatus.Approved && invoice.paidAmount === 0
 
   return (
     <div className="space-y-6">

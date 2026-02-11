@@ -655,6 +655,1112 @@ namespace Carmen.Infrastructure.Data.Migrations
                     b.ToTable("Vendors", (string)null);
                 });
 
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArInvoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid?>("ArAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("BalanceAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("CustomerReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("ExchangeRate")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<Guid>("FiscalPeriodId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<Guid?>("JournalVoucherId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("NetAmountBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("PaymentTermId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("PostedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PostedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SubTotalBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Tax1Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("Tax1ProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("Tax2Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("Tax2ProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalAmountBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("VoidReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<decimal>("WhtAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("WhtProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArAccountId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("FiscalPeriodId");
+
+                    b.HasIndex("JournalVoucherId");
+
+                    b.HasIndex("PaymentTermId");
+
+                    b.HasIndex("Tax1ProfileId");
+
+                    b.HasIndex("Tax2ProfileId");
+
+                    b.HasIndex("WhtProfileId");
+
+                    b.HasIndex("TenantId", "InvoiceDate");
+
+                    b.HasIndex("TenantId", "InvoiceNumber")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "Status");
+
+                    b.HasIndex("TenantId", "CustomerId", "DueDate");
+
+                    b.ToTable("ArInvoices", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArInvoiceLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AmountBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("ArInvoiceId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("LineNumber")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("Tax1Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("Tax1ProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Unit")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("Tax1ProfileId");
+
+                    b.HasIndex("ArInvoiceId", "LineNumber");
+
+                    b.ToTable("ArInvoiceLines", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArReceipt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("AllocatedAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("BankAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("BankReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("CheckDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CheckNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<decimal>("ExchangeRate")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<Guid>("FiscalPeriodId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("JournalVoucherId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("PayerName")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime?>("PostedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PostedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("ReceiptDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ReceiptMethod")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReceiptNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalAmountBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnallocatedAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("VoidReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankAccountId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("FiscalPeriodId");
+
+                    b.HasIndex("JournalVoucherId");
+
+                    b.HasIndex("TenantId", "ReceiptDate");
+
+                    b.HasIndex("TenantId", "ReceiptNumber")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "Status");
+
+                    b.HasIndex("TenantId", "CustomerId", "ReceiptDate");
+
+                    b.ToTable("ArReceipts", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArReceiptLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("AmountAllocated")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AmountAllocatedBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("ArInvoiceId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("ArReceiptId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ExchangeGainLoss")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("LineNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<decimal>("WhtAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArInvoiceId");
+
+                    b.HasIndex("ArReceiptId", "LineNumber");
+
+                    b.ToTable("ArReceiptLines", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("BankAccountNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("BankBranch")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("BankName")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("BankSwiftCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ContactPerson")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<decimal>("CreditLimit")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<decimal>("CurrentBalance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CustomerCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("CustomerNameLocal")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid?>("DefaultArAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DefaultPaymentTermId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DefaultRevenueAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DefaultTax1ProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DefaultTax2ProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DefaultWhtProfileId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Fax")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("State")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("TaxId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DefaultArAccountId");
+
+                    b.HasIndex("DefaultPaymentTermId");
+
+                    b.HasIndex("DefaultRevenueAccountId");
+
+                    b.HasIndex("DefaultTax1ProfileId");
+
+                    b.HasIndex("DefaultTax2ProfileId");
+
+                    b.HasIndex("DefaultWhtProfileId");
+
+                    b.HasIndex("TenantId", "CustomerCode")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "IsActive");
+
+                    b.ToTable("Customers", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.Asset", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("AccumDepreciationAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("AccumulatedDepreciation")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AcquisitionCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AcquisitionCostBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("AcquisitionDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("ApInvoiceId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("AssetAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AssetCategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AssetCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("AssetName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("AssetNameLocal")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Condition")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<decimal>("CurrentValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("DepreciatedMonths")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("DepreciationExpenseAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("DepreciationMethod")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DepreciationStartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<decimal?>("DisposalValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("DisposedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("ExchangeRate")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<decimal?>("GainLossAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsFullyDepreciated")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("LocationDescription")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<decimal>("MonthlyDepreciation")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("PurchaseReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("SalvageValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SerialNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("UsefulLifeMonths")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("VendorId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccumDepreciationAccountId");
+
+                    b.HasIndex("ApInvoiceId");
+
+                    b.HasIndex("AssetAccountId");
+
+                    b.HasIndex("AssetCategoryId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("DepreciationExpenseAccountId");
+
+                    b.HasIndex("VendorId");
+
+                    b.HasIndex("TenantId", "AcquisitionDate");
+
+                    b.HasIndex("TenantId", "AssetCategoryId");
+
+                    b.HasIndex("TenantId", "AssetCode")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "DepartmentId");
+
+                    b.HasIndex("TenantId", "Status");
+
+                    b.ToTable("Assets", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.AssetCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AssetCodePrefix")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("CategoryCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("CategoryNameLocal")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid?>("DefaultAccumDepreciationAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DefaultAssetAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DefaultDepreciationExpenseAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("DefaultDepreciationMethod")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("DefaultGainLossAccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("DefaultSalvagePercent")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("DefaultUsefulLifeMonths")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DefaultAccumDepreciationAccountId");
+
+                    b.HasIndex("DefaultAssetAccountId");
+
+                    b.HasIndex("DefaultDepreciationExpenseAccountId");
+
+                    b.HasIndex("DefaultGainLossAccountId");
+
+                    b.HasIndex("TenantId", "CategoryCode")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "IsActive");
+
+                    b.ToTable("AssetCategories", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.AssetDisposal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("AccumulatedDepreciationAtDisposal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("BookValueAtDisposal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BuyerName")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<decimal>("DisposalCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DisposalDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("DisposalMethod")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("DisposalValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("GainLossAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsPosted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid?>("JournalVoucherId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("NetProceeds")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<DateTime?>("PostedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PostedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetId")
+                        .IsUnique();
+
+                    b.HasIndex("JournalVoucherId");
+
+                    b.HasIndex("TenantId", "AssetId")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "DisposalDate");
+
+                    b.ToTable("AssetDisposals", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.DepreciationSchedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("AccumulatedDepreciation")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("ClosingValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<decimal>("DepreciationAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DepreciationAmountBase")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("FiscalPeriodId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsPosted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid?>("JournalVoucherId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<decimal>("OpeningValue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("PostedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PostedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("ScheduleDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ScheduleNumber")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetId");
+
+                    b.HasIndex("FiscalPeriodId");
+
+                    b.HasIndex("JournalVoucherId");
+
+                    b.HasIndex("TenantId", "ScheduleDate");
+
+                    b.HasIndex("TenantId", "AssetId", "FiscalPeriodId")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "FiscalPeriodId", "IsPosted");
+
+                    b.ToTable("DepreciationSchedules", (string)null);
+                });
+
             modelBuilder.Entity("Carmen.Domain.Entities.Auth.GroupTenantAccess", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -1181,6 +2287,9 @@ namespace Carmen.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("TermNameLocal")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -1619,6 +2728,837 @@ namespace Carmen.Infrastructure.Data.Migrations
                     b.ToTable("JournalVoucherLines", (string)null);
                 });
 
+            modelBuilder.Entity("Carmen.Domain.Entities.GL.RecurringVoucher", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<int?>("CustomIntervalDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("ExchangeRate")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<int>("ExecutionCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LastExecutionDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("NextExecutionDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("TotalCredit")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalDebit")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "Name");
+
+                    b.HasIndex("TenantId", "IsActive", "NextExecutionDate");
+
+                    b.ToTable("RecurringVouchers", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.GL.RecurringVoucherLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("CreditAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DebitAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("LineNumber")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RecurringVoucherId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("RecurringVoucherId", "LineNumber");
+
+                    b.ToTable("RecurringVoucherLines", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Notification.EmailLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("TemplateName")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("ToEmail")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt")
+                        .HasDatabaseName("IX_EmailLogs_CreatedAt");
+
+                    b.HasIndex("TenantId", "Status")
+                        .HasDatabaseName("IX_EmailLogs_TenantId_Status");
+
+                    b.ToTable("EmailLogs", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Notification.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("ActionUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Data")
+                        .HasMaxLength(4000)
+                        .HasColumnType("varchar(4000)");
+
+                    b.Property<Guid?>("EntityId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("EntityType")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "UserId", "CreatedAt")
+                        .HasDatabaseName("IX_Notifications_TenantId_UserId_CreatedAt");
+
+                    b.HasIndex("TenantId", "UserId", "IsRead")
+                        .HasDatabaseName("IX_Notifications_TenantId_UserId_IsRead");
+
+                    b.ToTable("Notifications", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Notification.NotificationPreference", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<bool>("EmailEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("InAppEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Type")
+                        .IsUnique()
+                        .HasDatabaseName("IX_NotificationPreferences_UserId_Type");
+
+                    b.ToTable("NotificationPreferences", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("DataSourceType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefaultOutputFormat")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("PageOrientation")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "Name")
+                        .HasDatabaseName("IX_ReportTemplates_TenantId_Name");
+
+                    b.ToTable("ReportTemplates", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplateColumn", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("AggregateFunction")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ColumnType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("FieldName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ReportTemplateId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int?>("SortDirection")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportTemplateId", "Order")
+                        .HasDatabaseName("IX_ReportTemplateColumns_TemplateId_Order");
+
+                    b.ToTable("ReportTemplateColumns", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplateFilter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("FieldName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Operator")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ReportTemplateId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Value2")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportTemplateId");
+
+                    b.ToTable("ReportTemplateFilters", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplateGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("FieldName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ReportTemplateId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("ShowSubtotals")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("SortDirection")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportTemplateId", "Order")
+                        .HasDatabaseName("IX_ReportTemplateGroups_TemplateId_Order");
+
+                    b.ToTable("ReportTemplateGroups", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ScheduledReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("CronExpression")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LastRunAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("NextRunAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("OutputFormat")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Recipients")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<Guid>("ReportTemplateId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportTemplateId");
+
+                    b.HasIndex("TenantId", "IsActive")
+                        .HasDatabaseName("IX_ScheduledReports_TenantId_IsActive");
+
+                    b.ToTable("ScheduledReports", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowDefinition", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal?>("AmountThreshold")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "EntityType", "IsActive")
+                        .HasDatabaseName("IX_WorkflowDefinitions_TenantId_EntityType_IsActive");
+
+                    b.ToTable("WorkflowDefinitions", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ActionAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("ActionByUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("InstanceId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("StepName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("StepOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstanceId", "ActionAt")
+                        .HasDatabaseName("IX_WorkflowHistories_InstanceId_ActionAt");
+
+                    b.ToTable("WorkflowHistories", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowInstance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("CurrentStepOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("DefinitionId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("EntityId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("EntityNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("SubmittedByUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DefinitionId");
+
+                    b.HasIndex("TenantId", "Status")
+                        .HasDatabaseName("IX_WorkflowInstances_TenantId_Status");
+
+                    b.HasIndex("TenantId", "EntityType", "EntityId")
+                        .HasDatabaseName("IX_WorkflowInstances_TenantId_EntityType_EntityId");
+
+                    b.ToTable("WorkflowInstances", (string)null);
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowStep", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("AllowDelegation")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid?>("ApproverRoleId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("ApproverUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<Guid>("DefinitionId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("StepName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("StepOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DefinitionId", "StepOrder")
+                        .HasDatabaseName("IX_WorkflowSteps_DefinitionId_StepOrder");
+
+                    b.ToTable("WorkflowSteps", (string)null);
+                });
+
             modelBuilder.Entity("Carmen.Domain.Entities.AP.ApInvoice", b =>
                 {
                     b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "ApAccount")
@@ -1811,6 +3751,326 @@ namespace Carmen.Infrastructure.Data.Migrations
                     b.Navigation("DefaultWhtProfile");
                 });
 
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArInvoice", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "ArAccount")
+                        .WithMany()
+                        .HasForeignKey("ArAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.AR.Customer", "Customer")
+                        .WithMany("Invoices")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.FiscalPeriod", "FiscalPeriod")
+                        .WithMany()
+                        .HasForeignKey("FiscalPeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.JournalVoucher", "JournalVoucher")
+                        .WithMany()
+                        .HasForeignKey("JournalVoucherId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.PaymentTerm", "PaymentTerm")
+                        .WithMany()
+                        .HasForeignKey("PaymentTermId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.TaxProfile", "Tax1Profile")
+                        .WithMany()
+                        .HasForeignKey("Tax1ProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.TaxProfile", "Tax2Profile")
+                        .WithMany()
+                        .HasForeignKey("Tax2ProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.TaxProfile", "WhtProfile")
+                        .WithMany()
+                        .HasForeignKey("WhtProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ArAccount");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("FiscalPeriod");
+
+                    b.Navigation("JournalVoucher");
+
+                    b.Navigation("PaymentTerm");
+
+                    b.Navigation("Tax1Profile");
+
+                    b.Navigation("Tax2Profile");
+
+                    b.Navigation("WhtProfile");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArInvoiceLine", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.AR.ArInvoice", "ArInvoice")
+                        .WithMany("Lines")
+                        .HasForeignKey("ArInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.TaxProfile", "Tax1Profile")
+                        .WithMany()
+                        .HasForeignKey("Tax1ProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Account");
+
+                    b.Navigation("ArInvoice");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Tax1Profile");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArReceipt", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "BankAccount")
+                        .WithMany()
+                        .HasForeignKey("BankAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.AR.Customer", "Customer")
+                        .WithMany("Receipts")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.FiscalPeriod", "FiscalPeriod")
+                        .WithMany()
+                        .HasForeignKey("FiscalPeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.JournalVoucher", "JournalVoucher")
+                        .WithMany()
+                        .HasForeignKey("JournalVoucherId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("BankAccount");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("FiscalPeriod");
+
+                    b.Navigation("JournalVoucher");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArReceiptLine", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.AR.ArInvoice", "ArInvoice")
+                        .WithMany("ReceiptLines")
+                        .HasForeignKey("ArInvoiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.AR.ArReceipt", "ArReceipt")
+                        .WithMany("Lines")
+                        .HasForeignKey("ArReceiptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ArInvoice");
+
+                    b.Navigation("ArReceipt");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.Customer", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "DefaultArAccount")
+                        .WithMany()
+                        .HasForeignKey("DefaultArAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.PaymentTerm", "DefaultPaymentTerm")
+                        .WithMany()
+                        .HasForeignKey("DefaultPaymentTermId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "DefaultRevenueAccount")
+                        .WithMany()
+                        .HasForeignKey("DefaultRevenueAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.TaxProfile", "DefaultTax1Profile")
+                        .WithMany()
+                        .HasForeignKey("DefaultTax1ProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.TaxProfile", "DefaultTax2Profile")
+                        .WithMany()
+                        .HasForeignKey("DefaultTax2ProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.TaxProfile", "DefaultWhtProfile")
+                        .WithMany()
+                        .HasForeignKey("DefaultWhtProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("DefaultArAccount");
+
+                    b.Navigation("DefaultPaymentTerm");
+
+                    b.Navigation("DefaultRevenueAccount");
+
+                    b.Navigation("DefaultTax1Profile");
+
+                    b.Navigation("DefaultTax2Profile");
+
+                    b.Navigation("DefaultWhtProfile");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.Asset", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "AccumDepreciationAccount")
+                        .WithMany()
+                        .HasForeignKey("AccumDepreciationAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.AP.ApInvoice", "ApInvoice")
+                        .WithMany()
+                        .HasForeignKey("ApInvoiceId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "AssetAccount")
+                        .WithMany()
+                        .HasForeignKey("AssetAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.Asset.AssetCategory", "AssetCategory")
+                        .WithMany("Assets")
+                        .HasForeignKey("AssetCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.Configuration.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "DepreciationExpenseAccount")
+                        .WithMany()
+                        .HasForeignKey("DepreciationExpenseAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.AP.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("AccumDepreciationAccount");
+
+                    b.Navigation("ApInvoice");
+
+                    b.Navigation("AssetAccount");
+
+                    b.Navigation("AssetCategory");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("DepreciationExpenseAccount");
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.AssetCategory", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "DefaultAccumDepreciationAccount")
+                        .WithMany()
+                        .HasForeignKey("DefaultAccumDepreciationAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "DefaultAssetAccount")
+                        .WithMany()
+                        .HasForeignKey("DefaultAssetAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "DefaultDepreciationExpenseAccount")
+                        .WithMany()
+                        .HasForeignKey("DefaultDepreciationExpenseAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "DefaultGainLossAccount")
+                        .WithMany()
+                        .HasForeignKey("DefaultGainLossAccountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("DefaultAccumDepreciationAccount");
+
+                    b.Navigation("DefaultAssetAccount");
+
+                    b.Navigation("DefaultDepreciationExpenseAccount");
+
+                    b.Navigation("DefaultGainLossAccount");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.AssetDisposal", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Asset.Asset", "Asset")
+                        .WithOne("Disposal")
+                        .HasForeignKey("Carmen.Domain.Entities.Asset.AssetDisposal", "AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.JournalVoucher", "JournalVoucher")
+                        .WithMany()
+                        .HasForeignKey("JournalVoucherId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Asset");
+
+                    b.Navigation("JournalVoucher");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.DepreciationSchedule", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Asset.Asset", "Asset")
+                        .WithMany("DepreciationSchedules")
+                        .HasForeignKey("AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.FiscalPeriod", "FiscalPeriod")
+                        .WithMany()
+                        .HasForeignKey("FiscalPeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.JournalVoucher", "JournalVoucher")
+                        .WithMany()
+                        .HasForeignKey("JournalVoucherId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Asset");
+
+                    b.Navigation("FiscalPeriod");
+
+                    b.Navigation("JournalVoucher");
+                });
+
             modelBuilder.Entity("Carmen.Domain.Entities.Auth.GroupTenantAccess", b =>
                 {
                     b.HasOne("Carmen.Domain.Entities.Auth.Tenant", "Tenant")
@@ -1955,6 +4215,102 @@ namespace Carmen.Infrastructure.Data.Migrations
                     b.Navigation("JournalVoucher");
                 });
 
+            modelBuilder.Entity("Carmen.Domain.Entities.GL.RecurringVoucherLine", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.GL.ChartOfAccount", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Carmen.Domain.Entities.GL.RecurringVoucher", "RecurringVoucher")
+                        .WithMany("Lines")
+                        .HasForeignKey("RecurringVoucherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("RecurringVoucher");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplateColumn", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Report.ReportTemplate", "ReportTemplate")
+                        .WithMany("Columns")
+                        .HasForeignKey("ReportTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReportTemplate");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplateFilter", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Report.ReportTemplate", "ReportTemplate")
+                        .WithMany("Filters")
+                        .HasForeignKey("ReportTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReportTemplate");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplateGroup", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Report.ReportTemplate", "ReportTemplate")
+                        .WithMany("Groups")
+                        .HasForeignKey("ReportTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReportTemplate");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ScheduledReport", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Report.ReportTemplate", "ReportTemplate")
+                        .WithMany("ScheduledReports")
+                        .HasForeignKey("ReportTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReportTemplate");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowHistory", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Workflow.WorkflowInstance", "Instance")
+                        .WithMany("History")
+                        .HasForeignKey("InstanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instance");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowInstance", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Workflow.WorkflowDefinition", "Definition")
+                        .WithMany()
+                        .HasForeignKey("DefinitionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Definition");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowStep", b =>
+                {
+                    b.HasOne("Carmen.Domain.Entities.Workflow.WorkflowDefinition", "Definition")
+                        .WithMany("Steps")
+                        .HasForeignKey("DefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Definition");
+                });
+
             modelBuilder.Entity("Carmen.Domain.Entities.AP.ApInvoice", b =>
                 {
                     b.Navigation("Lines");
@@ -1972,6 +4328,37 @@ namespace Carmen.Infrastructure.Data.Migrations
                     b.Navigation("Invoices");
 
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArInvoice", b =>
+                {
+                    b.Navigation("Lines");
+
+                    b.Navigation("ReceiptLines");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.ArReceipt", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.AR.Customer", b =>
+                {
+                    b.Navigation("Invoices");
+
+                    b.Navigation("Receipts");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.Asset", b =>
+                {
+                    b.Navigation("DepreciationSchedules");
+
+                    b.Navigation("Disposal");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Asset.AssetCategory", b =>
+                {
+                    b.Navigation("Assets");
                 });
 
             modelBuilder.Entity("Carmen.Domain.Entities.Auth.Permission", b =>
@@ -2022,6 +4409,32 @@ namespace Carmen.Infrastructure.Data.Migrations
             modelBuilder.Entity("Carmen.Domain.Entities.GL.JournalVoucher", b =>
                 {
                     b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.GL.RecurringVoucher", b =>
+                {
+                    b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Report.ReportTemplate", b =>
+                {
+                    b.Navigation("Columns");
+
+                    b.Navigation("Filters");
+
+                    b.Navigation("Groups");
+
+                    b.Navigation("ScheduledReports");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowDefinition", b =>
+                {
+                    b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("Carmen.Domain.Entities.Workflow.WorkflowInstance", b =>
+                {
+                    b.Navigation("History");
                 });
 #pragma warning restore 612, 618
         }

@@ -279,7 +279,7 @@ if (app.Environment.IsDevelopment())
 if (app.Environment.IsDevelopment())
 {
     app.MapSwagger("/openapi/{documentName}.json");
-    app.MapScalarApiReference("/scalar/{documentName}", options =>
+    app.MapScalarApiReference("/scalar", options =>
     {
         options
             .WithTitle("Carmen API")

@@ -13,7 +13,23 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { useApprovalHistory } from "../hooks"
-import { WorkflowEntityTypeLabels } from "../types"
+import { WorkflowEntityTypeLabels, WorkflowStepActionLabels } from "../types"
+import type { WorkflowStepAction } from "../types"
+
+function getActionVariant(action: WorkflowStepAction): "default" | "secondary" | "destructive" | "outline" {
+  switch (action) {
+    case 1: // Approved
+      return "default"
+    case 2: // Rejected
+      return "destructive"
+    case 3: // Delegated
+      return "secondary"
+    case 4: // Returned
+      return "outline"
+    default:
+      return "outline"
+  }
+}
 
 export function ApprovalHistoryPage() {
   const { t } = useTranslation()
@@ -57,13 +73,14 @@ export function ApprovalHistoryPage() {
                     <TableHead>Type</TableHead>
                     <TableHead>Workflow</TableHead>
                     <TableHead>Step</TableHead>
-                    <TableHead>Submitted By</TableHead>
-                    <TableHead>Submitted At</TableHead>
+                    <TableHead>Action</TableHead>
+                    <TableHead>Action By</TableHead>
+                    <TableHead>Action At</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {data.items.map((item) => (
-                    <TableRow key={item.instanceId}>
+                    <TableRow key={`${item.instanceId}-${item.stepOrder}`}>
                       <TableCell className="font-medium">{item.entityNumber}</TableCell>
                       <TableCell>
                         <Badge variant="outline">
@@ -73,12 +90,17 @@ export function ApprovalHistoryPage() {
                       <TableCell>{item.definitionName}</TableCell>
                       <TableCell>
                         <Badge variant="secondary">
-                          Step {item.currentStepOrder}: {item.currentStepName}
+                          Step {item.stepOrder}: {item.stepName}
                         </Badge>
                       </TableCell>
-                      <TableCell>{item.submittedByUserName ?? "—"}</TableCell>
                       <TableCell>
-                        {new Date(item.submittedAt).toLocaleDateString()}
+                        <Badge variant={getActionVariant(item.action)}>
+                          {WorkflowStepActionLabels[item.action]}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{item.actionByUserName ?? "—"}</TableCell>
+                      <TableCell>
+                        {new Date(item.actionAt).toLocaleDateString()}
                       </TableCell>
                     </TableRow>
                   ))}

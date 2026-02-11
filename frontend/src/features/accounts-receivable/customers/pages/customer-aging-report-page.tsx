@@ -73,9 +73,9 @@ function CustomerAgingDetail({ customerId, asOfDate }: CustomerAgingDetailProps)
       ),
     },
     {
-      accessorKey: "customerInvoiceNumber",
+      accessorKey: "customerReference",
       header: t("ar.invoices.columns.customerInvoiceNumber"),
-      cell: ({ row }) => row.getValue("customerInvoiceNumber") || "-",
+      cell: ({ row }) => row.getValue("customerReference") || "-",
     },
     {
       accessorKey: "invoiceDate",
