@@ -246,6 +246,21 @@ export function JournalVoucherFormPage() {
   )
 
   const onSubmit = async (data: FormValues, shouldSubmitForApproval: boolean = false) => {
+    // Convert placeholder/empty values to undefined for proper GUID serialization
+    const fiscalPeriodId = data.fiscalPeriodId === "default" || !data.fiscalPeriodId
+      ? undefined
+      : data.fiscalPeriodId
+
+    const mapLine = (line: FormValues["lines"][number]) => ({
+      id: line.id || undefined,
+      accountId: line.accountId,
+      debitAmount: line.debitAmount,
+      creditAmount: line.creditAmount,
+      description: line.description || undefined,
+      reference: line.reference || undefined,
+      departmentId: line.departmentId || undefined,
+    })
+
     try {
       if (isEdit) {
         const updated = await updateVoucher.mutateAsync({
@@ -253,20 +268,12 @@ export function JournalVoucherFormPage() {
           data: {
             voucherDate: data.voucherDate,
             postingDate: data.postingDate,
-            description: data.description,
-            reference: data.reference,
+            description: data.description || undefined,
+            reference: data.reference || undefined,
             currencyCode: data.currencyCode,
             exchangeRate: data.exchangeRate,
-            fiscalPeriodId: data.fiscalPeriodId,
-            lines: data.lines.map((line) => ({
-              id: line.id,
-              accountId: line.accountId,
-              debitAmount: line.debitAmount,
-              creditAmount: line.creditAmount,
-              description: line.description,
-              reference: line.reference,
-              departmentId: line.departmentId,
-            })),
+            fiscalPeriodId,
+            lines: data.lines.map(mapLine),
           },
         })
 
@@ -278,19 +285,12 @@ export function JournalVoucherFormPage() {
           voucherDate: data.voucherDate,
           postingDate: data.postingDate,
           voucherType: data.voucherType,
-          description: data.description,
-          reference: data.reference,
+          description: data.description || undefined,
+          reference: data.reference || undefined,
           currencyCode: data.currencyCode,
           exchangeRate: data.exchangeRate,
-          fiscalPeriodId: data.fiscalPeriodId,
-          lines: data.lines.map((line) => ({
-            accountId: line.accountId,
-            debitAmount: line.debitAmount,
-            creditAmount: line.creditAmount,
-            description: line.description,
-            reference: line.reference,
-            departmentId: line.departmentId,
-          })),
+          fiscalPeriodId,
+          lines: data.lines.map(mapLine),
         })
 
         if (shouldSubmitForApproval) {
@@ -304,7 +304,31 @@ export function JournalVoucherFormPage() {
     }
   }
 
-  const handleSave = form.handleSubmit((data) => onSubmit(data, false))
+  const handleSave = async () => {
+    // For draft saves, validate header fields only - skip balance check
+    const isHeaderValid = await form.trigger([
+      "voucherDate",
+      "postingDate",
+      "voucherType",
+      "currencyCode",
+      "exchangeRate",
+      "fiscalPeriodId",
+    ])
+    if (!isHeaderValid) return
+
+    const data = form.getValues()
+
+    // Filter out empty lines (no account and no amounts) before sending to API
+    const nonEmptyLines = data.lines.filter(
+      (line) => line.accountId || line.debitAmount > 0 || line.creditAmount > 0
+    )
+    if (nonEmptyLines.length === 0) {
+      form.setError("lines", { message: "At least one line with data is required" })
+      return
+    }
+
+    await onSubmit({ ...data, lines: nonEmptyLines }, false)
+  }
   const handleSaveAndSubmit = form.handleSubmit((data) => onSubmit(data, true))
 
   const isSubmitting = createVoucher.isPending || updateVoucher.isPending || submitForApproval.isPending

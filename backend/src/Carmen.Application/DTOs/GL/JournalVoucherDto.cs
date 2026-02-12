@@ -71,7 +71,7 @@ public record CreateJournalVoucherRequest(
     string? Reference,
     string CurrencyCode,
     decimal ExchangeRate,
-    Guid FiscalPeriodId,
+    Guid? FiscalPeriodId,
     List<CreateJournalVoucherLineRequest> Lines
 );
 
@@ -91,7 +91,7 @@ public record UpdateJournalVoucherRequest(
     string? Reference,
     string CurrencyCode,
     decimal ExchangeRate,
-    Guid FiscalPeriodId,
+    Guid? FiscalPeriodId,
     List<UpdateJournalVoucherLineRequest> Lines
 );
 

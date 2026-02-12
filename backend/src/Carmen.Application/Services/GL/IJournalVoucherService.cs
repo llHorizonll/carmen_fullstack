@@ -74,5 +74,5 @@ public interface IJournalVoucherService
     /// <summary>
     /// Validate voucher lines (debit = credit, valid accounts, etc.)
     /// </summary>
-    Task<List<string>> ValidateVoucherAsync(CreateJournalVoucherRequest request);
+    Task<List<string>> ValidateVoucherAsync(CreateJournalVoucherRequest request, bool isDraft = false);
 }

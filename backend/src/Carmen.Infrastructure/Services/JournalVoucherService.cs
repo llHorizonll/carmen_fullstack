@@ -141,8 +141,8 @@ public class JournalVoucherService : IJournalVoucherService
 
     public async Task<JournalVoucherDto> CreateVoucherAsync(CreateJournalVoucherRequest request)
     {
-        // Validate
-        var errors = await ValidateVoucherAsync(request);
+        // Validate (lenient for drafts - skip balance check)
+        var errors = await ValidateVoucherAsync(request, isDraft: true);
         if (errors.Count > 0)
         {
             throw new InvalidOperationException(string.Join("; ", errors));
@@ -153,6 +153,10 @@ public class JournalVoucherService : IJournalVoucherService
 
         // Generate voucher number
         var voucherNumber = await GenerateVoucherNumberAsync(request.VoucherType, request.VoucherDate);
+
+        // Resolve fiscal period from posting date if not provided
+        var fiscalPeriodId = request.FiscalPeriodId
+            ?? (await ResolveFiscalPeriodAsync(request.PostingDate));
 
         var voucher = new JournalVoucher
         {
@@ -167,7 +171,7 @@ public class JournalVoucherService : IJournalVoucherService
             Reference = request.Reference,
             CurrencyCode = request.CurrencyCode,
             ExchangeRate = request.ExchangeRate,
-            FiscalPeriodId = request.FiscalPeriodId,
+            FiscalPeriodId = fiscalPeriodId,
             TotalDebit = request.Lines.Sum(l => l.DebitAmount),
             TotalCredit = request.Lines.Sum(l => l.CreditAmount),
             CreatedBy = _currentUserService.Email ?? "system"
@@ -222,13 +226,13 @@ public class JournalVoucherService : IJournalVoucherService
             throw new InvalidOperationException("Only draft vouchers can be updated.");
         }
 
-        // Validate lines
+        // Calculate totals
         var totalDebit = request.Lines.Sum(l => l.DebitAmount);
         var totalCredit = request.Lines.Sum(l => l.CreditAmount);
-        if (totalDebit != totalCredit)
-        {
-            throw new InvalidOperationException($"Debit ({totalDebit:N2}) must equal Credit ({totalCredit:N2}).");
-        }
+
+        // Resolve fiscal period from posting date if not provided
+        var fiscalPeriodId = request.FiscalPeriodId
+            ?? (await ResolveFiscalPeriodAsync(request.PostingDate));
 
         // Update voucher
         voucher.VoucherDate = request.VoucherDate;
@@ -237,7 +241,7 @@ public class JournalVoucherService : IJournalVoucherService
         voucher.Reference = request.Reference;
         voucher.CurrencyCode = request.CurrencyCode;
         voucher.ExchangeRate = request.ExchangeRate;
-        voucher.FiscalPeriodId = request.FiscalPeriodId;
+        voucher.FiscalPeriodId = fiscalPeriodId;
         voucher.TotalDebit = totalDebit;
         voucher.TotalCredit = totalCredit;
         voucher.UpdatedBy = _currentUserService.Email;
@@ -300,7 +304,9 @@ public class JournalVoucherService : IJournalVoucherService
 
     public async Task<JournalVoucherDto> SubmitForApprovalAsync(Guid id, SubmitForApprovalRequest request)
     {
-        var voucher = await _context.JournalVouchers.FindAsync(id);
+        var voucher = await _context.JournalVouchers
+            .Include(v => v.Lines)
+            .FirstOrDefaultAsync(v => v.Id == id);
 
         if (voucher == null)
         {
@@ -310,6 +316,18 @@ public class JournalVoucherService : IJournalVoucherService
         if (voucher.Status != DocumentStatus.Draft)
         {
             throw new InvalidOperationException("Only draft vouchers can be submitted for approval.");
+        }
+
+        // Full validation before submission (balance must be correct)
+        if (voucher.TotalDebit != voucher.TotalCredit)
+        {
+            throw new InvalidOperationException(
+                $"Total debit ({voucher.TotalDebit:N2}) must equal total credit ({voucher.TotalCredit:N2}) before submitting.");
+        }
+
+        if (voucher.Lines.Any(l => l.DebitAmount == 0 && l.CreditAmount == 0))
+        {
+            throw new InvalidOperationException("Each line must have a debit or credit amount before submitting.");
         }
 
         voucher.Status = DocumentStatus.Pending;
@@ -564,7 +582,7 @@ public class JournalVoucherService : IJournalVoucherService
         return $"{prefix}{yearMonth}{nextNumber:D4}";
     }
 
-    public async Task<List<string>> ValidateVoucherAsync(CreateJournalVoucherRequest request)
+    public async Task<List<string>> ValidateVoucherAsync(CreateJournalVoucherRequest request, bool isDraft = false)
     {
         var errors = new List<string>();
 
@@ -575,25 +593,34 @@ public class JournalVoucherService : IJournalVoucherService
             return errors;
         }
 
-        // Check debit = credit
-        var totalDebit = request.Lines.Sum(l => l.DebitAmount);
-        var totalCredit = request.Lines.Sum(l => l.CreditAmount);
-        if (totalDebit != totalCredit)
+        // Balance and line-level checks only apply for non-draft (submit/post)
+        if (!isDraft)
         {
-            errors.Add($"Total debit ({totalDebit:N2}) must equal total credit ({totalCredit:N2}).");
+            // Check debit = credit
+            var totalDebit = request.Lines.Sum(l => l.DebitAmount);
+            var totalCredit = request.Lines.Sum(l => l.CreditAmount);
+            if (totalDebit != totalCredit)
+            {
+                errors.Add($"Total debit ({totalDebit:N2}) must equal total credit ({totalCredit:N2}).");
+            }
+
+            // Check each line has either debit or credit (not both, not neither)
+            foreach (var line in request.Lines)
+            {
+                if (line.DebitAmount == 0 && line.CreditAmount == 0)
+                {
+                    errors.Add("Each line must have a debit or credit amount.");
+                }
+                if (line.DebitAmount > 0 && line.CreditAmount > 0)
+                {
+                    errors.Add("A line cannot have both debit and credit amounts.");
+                }
+            }
         }
 
-        // Check each line has either debit or credit (not both, not neither)
+        // Negative amounts are never allowed
         foreach (var line in request.Lines)
         {
-            if (line.DebitAmount == 0 && line.CreditAmount == 0)
-            {
-                errors.Add("Each line must have a debit or credit amount.");
-            }
-            if (line.DebitAmount > 0 && line.CreditAmount > 0)
-            {
-                errors.Add("A line cannot have both debit and credit amounts.");
-            }
             if (line.DebitAmount < 0 || line.CreditAmount < 0)
             {
                 errors.Add("Amounts cannot be negative.");
@@ -627,18 +654,36 @@ public class JournalVoucherService : IJournalVoucherService
             }
         }
 
-        // Check fiscal period is open
-        var fiscalPeriod = await _context.FiscalPeriods.FindAsync(request.FiscalPeriodId);
-        if (fiscalPeriod == null)
+        // Check fiscal period is open (skip if not provided - will be auto-resolved)
+        if (request.FiscalPeriodId.HasValue)
         {
-            errors.Add("Fiscal period not found.");
-        }
-        else if (fiscalPeriod.Status != PeriodStatus.Open)
-        {
-            errors.Add("Fiscal period is not open.");
+            var fiscalPeriod = await _context.FiscalPeriods.FindAsync(request.FiscalPeriodId.Value);
+            if (fiscalPeriod == null)
+            {
+                errors.Add("Fiscal period not found.");
+            }
+            else if (fiscalPeriod.Status != PeriodStatus.Open)
+            {
+                errors.Add("Fiscal period is not open.");
+            }
         }
 
         return errors;
+    }
+
+    private async Task<Guid> ResolveFiscalPeriodAsync(DateTime postingDate)
+    {
+        var fiscalPeriod = await _context.FiscalPeriods
+            .Where(fp => fp.StartDate <= postingDate && fp.EndDate >= postingDate && fp.Status == PeriodStatus.Open)
+            .FirstOrDefaultAsync();
+
+        if (fiscalPeriod == null)
+        {
+            throw new InvalidOperationException(
+                $"No open fiscal period found for posting date {postingDate:yyyy-MM-dd}.");
+        }
+
+        return fiscalPeriod.Id;
     }
 
     private JournalVoucherDto MapToDto(JournalVoucher voucher)

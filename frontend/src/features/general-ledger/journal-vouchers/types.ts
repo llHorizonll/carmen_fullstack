@@ -104,7 +104,7 @@ export interface CreateJournalVoucherRequest {
   reference?: string
   currencyCode: string
   exchangeRate: number
-  fiscalPeriodId: string
+  fiscalPeriodId?: string
   lines: CreateJournalVoucherLineRequest[]
 }
 
@@ -124,7 +124,7 @@ export interface UpdateJournalVoucherRequest {
   reference?: string
   currencyCode: string
   exchangeRate: number
-  fiscalPeriodId: string
+  fiscalPeriodId?: string
   lines: UpdateJournalVoucherLineRequest[]
 }
 
